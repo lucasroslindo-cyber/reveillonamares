@@ -122,6 +122,12 @@ select:disabled{opacity:.55}
 .f.bad select{border-bottom-color:var(--err)}
 .f>label,.f>.lbl{font-family:var(--ui);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:6px;white-space:nowrap}
 .wrapat{position:relative;display:flex;align-items:center}
+.telrow{display:flex;align-items:stretch;gap:12px}
+.ddi{position:relative;flex:0 0 auto;display:flex;align-items:center;border-bottom:1px solid var(--line)}
+.ddi-v{font:400 16px/1.3 var(--ui);color:var(--ink);padding:11px 18px 11px 0;white-space:nowrap;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23a8874b' stroke-width='1.4'/%3E%3C/svg%3E") right 2px center/11px 8px no-repeat}
+.ddi select{position:absolute;inset:0;opacity:0;padding:0;border:0;cursor:pointer;font-size:16px}
+.ddi:focus-within{border-bottom-color:var(--ink)}
+.f.bad .ddi{border-bottom-color:var(--err)}
 .at{position:absolute;left:0;font-family:var(--ui);font-size:16px;color:var(--muted);pointer-events:none}
 input[type=text],input[type=tel],input[type=email]{width:100%;min-width:0;font:400 16px/1.3 var(--ui);color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:11px 0 11px;outline:none;transition:border-color .2s}
 input.ig{padding-left:16px}
@@ -354,7 +360,8 @@ footer .kicker{font-size:9.1px;letter-spacing:.42em}
         <div class="f" id="f-insta"><label for="insta">Instagram</label>
           <div class="wrapat"><span class="at">@</span><input type="text" class="ig" id="insta" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="seuperfil"></div><span class="msg"></span></div>
         <div class="f" id="f-cel"><label for="cel">Celular / WhatsApp</label>
-          <input type="tel" id="cel" inputmode="tel" autocomplete="tel-national" placeholder="(47) 99999-9999"><span class="msg"></span></div>
+          <div class="telrow"><div class="ddi"><span class="ddi-v" id="ddiV" aria-hidden="true">🇧🇷 +55</span><select id="ddi" aria-label="País do celular" autocomplete="tel-country-code"><option value="BR:55">Brasil (+55)</option></select></div>
+          <input type="tel" id="cel" inputmode="tel" autocomplete="tel-national" placeholder="(47) 99999-9999"></div><span class="msg"></span></div>
         <div class="f" id="f-email"><label for="email">E-mail</label>
           <input type="email" id="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="voce@email.com"><span class="msg"></span></div>
       </div>
@@ -391,6 +398,7 @@ footer .kicker{font-size:9.1px;letter-spacing:.42em}
             <option value="SP">São Paulo</option>
             <option value="SE">Sergipe</option>
             <option value="TO">Tocantins</option>
+            <option value="EX">Moro fora do Brasil</option>
           </select><span class="msg"></span></div>
         <div class="f" id="f-cidade"><label for="cidade">Cidade</label>
           <select id="cidade" disabled><option value="" selected>Escolha o estado</option></select>
@@ -515,9 +523,51 @@ function tick(){
 }
 tick(); setInterval(tick, 1000);
 
+/* país do celular (DDI): nomes em português pelo navegador */
+const DDI_RAW = "AD:376;AE:971;AF:93;AG:1268;AI:1264;AL:355;AM:374;AO:244;AQ:672;AR:54;AS:1684;AT:43;AU:61;AW:297;AX:358;AZ:994;BA:387;BB:1246;BD:880;BE:32;BF:226;BG:359;BH:973;BI:257;BJ:229;BL:590;BM:1441;BN:673;BO:591;BQ:5997;BR:55;BS:1242;BT:975;BV:47;BW:267;BY:375;BZ:501;CA:1;CC:61;CD:243;CF:236;CG:242;CH:41;CI:225;CK:682;CL:56;CM:237;CN:86;CO:57;CR:506;CU:53;CV:238;CW:5999;CX:61;CY:357;CZ:420;DE:49;DJ:253;DK:45;DM:1767;DO:1809;DZ:213;EC:593;EE:372;EG:20;EH:212;ER:291;ES:34;ET:251;FI:358;FJ:679;FK:500;FM:691;FO:298;FR:33;GA:241;GB:44;GD:1473;GE:995;GF:594;GG:44;GH:233;GI:350;GL:299;GM:220;GN:224;GP:590;GQ:240;GR:30;GS:500;GT:502;GU:1671;GW:245;GY:592;HK:852;HM:61;HN:504;HR:385;HT:509;HU:36;ID:62;IE:353;IL:972;IM:44;IN:91;IO:246;IQ:964;IR:98;IS:354;IT:39;JE:44;JM:1876;JO:962;JP:81;KE:254;KG:996;KH:855;KI:686;KM:269;KN:1869;KP:850;KR:82;KW:965;KY:1345;KZ:7;LA:856;LB:961;LC:1758;LI:423;LK:94;LR:231;LS:266;LT:370;LU:352;LV:371;LY:218;MA:212;MC:377;MD:373;ME:382;MF:590;MG:261;MH:692;MK:389;ML:223;MM:95;MN:976;MO:853;MP:1670;MQ:596;MR:222;MS:1664;MT:356;MU:230;MV:960;MW:265;MX:52;MY:60;MZ:258;NA:264;NC:687;NE:227;NF:672;NG:234;NI:505;NL:31;NO:47;NP:977;NR:674;NU:683;NZ:64;OM:968;PA:507;PE:51;PF:689;PG:675;PH:63;PK:92;PL:48;PM:508;PN:64;PR:1787;PS:970;PT:351;PW:680;PY:595;QA:974;RE:262;RO:40;RS:381;RU:7;RW:250;SA:966;SB:677;SC:248;SD:249;SE:46;SG:65;SH:290;SI:386;SJ:4779;SK:421;SL:232;SM:378;SN:221;SO:252;SR:597;SS:211;ST:239;SV:503;SX:1721;SY:963;SZ:268;TC:1649;TD:235;TF:262;TG:228;TH:66;TJ:992;TK:690;TL:670;TM:993;TN:216;TO:676;TR:90;TT:1868;TV:688;TW:886;TZ:255;UA:380;UG:256;UM:1;US:1;UY:598;UZ:998;VA:379;VC:1784;VE:58;VG:1284;VI:1340;VN:84;VU:678;WF:681;WS:685;XK:377;YE:967;YT:262;ZA:27;ZM:260;ZW:263";
+const ddiSel = $('ddi'), ddiV = $('ddiV');
+const flag = cc => cc.replace(/./g, ch => String.fromCodePoint(127397 + ch.charCodeAt(0)));
+let regionName = cc => cc;
+try { const dn = new Intl.DisplayNames(['pt-BR'], {type:'region'}); regionName = cc => { try { return dn.of(cc) || cc; } catch(e){ return cc; } }; } catch(e){}
+const DDIS = DDI_RAW.split(';').map(p => { const [cc, code] = p.split(':'); return {cc, code, name: regionName(cc)}; });
+const TOP = ['BR','US','PT','AR','UY','PY','CL','IT','ES'];
+const byName = (a,b) => a.name.localeCompare(b.name, 'pt-BR');
+const opt = d => `<option value="${d.cc}:${d.code}">${d.name} (+${d.code})</option>`;
+ddiSel.innerHTML = TOP.map(cc => DDIS.find(d => d.cc === cc)).filter(Boolean).map(opt).join('')
+  + '<option disabled>──────────</option>' + DDIS.filter(d => !TOP.includes(d.cc)).sort(byName).map(opt).join('');
+ddiSel.value = 'BR:55';
+const ddi = () => { const [cc, code] = ddiSel.value.split(':'); return {cc, code}; };
+/* quando o mesmo código serve vários países, fica o mais comum */
+const PREF = {'1':'US','7':'RU','44':'GB','47':'NO','61':'AU','262':'RE','590':'GP','599':'CW','212':'MA','358':'FI','39':'IT'};
+function detectDDI(d){
+  for (let n = 4; n >= 1; n--){
+    const pre = d.slice(0, n);
+    const hits = DDIS.filter(x => x.code === pre);
+    if (hits.length) return hits.find(x => x.cc === PREF[pre]) || hits[0];
+  }
+  return null;
+}
+function showDDI(){
+  const {cc, code} = ddi();
+  ddiV.textContent = `${flag(cc)} +${code}`;
+  $('cel').placeholder = cc === 'BR' ? '(47) 99999-9999' : 'Número com código de área';
+}
+ddiSel.addEventListener('change', () => { showDDI(); clear($('f-cel')); $('cel').dispatchEvent(new Event('input')); $('cel').focus(); });
+showDDI();
+
 /* masks */
 const digits = v => v.replace(/\D/g,'');
 $('cel').addEventListener('input', e => {
+  const raw = e.target.value.trim();
+  /* digitou +351…, 00351… : escolhe o país sozinho */
+  if (/^(\+|00)/.test(raw)){
+    const all = digits(raw).replace(/^00/, '');
+    const hit = all && detectDDI(all);
+    if (!hit){ e.target.value = '+' + all.slice(0,4); return; }
+    ddiSel.value = `${hit.cc}:${hit.code}`; showDDI(); clear($('f-cel'));
+    e.target.value = all.slice(hit.code.length);
+  }
+  if (ddi().cc !== 'BR'){ e.target.value = e.target.value.replace(/[^\d ()-]/g,'').replace(/^\s+/,'').slice(0,20); return; }
   const d = digits(e.target.value).slice(0,11); let v = d;
   if (d.length > 2) v = `(${d.slice(0,2)}) ${d.slice(2)}`;
   if (d.length > 6) v = `(${d.slice(0,2)}) ${d.slice(2, d.length===11?7:6)}-${d.slice(d.length===11?7:6)}`;
@@ -556,6 +606,8 @@ const cidadeSel = $('cidade'), cidadeTxt = $('cidadeTxt'), cache = {};
 const useText = () => { cidadeSel.hidden = true; cidadeSel.disabled = true; cidadeTxt.hidden = false; };
 $('uf').addEventListener('change', () => {
   const uf = $('uf').value; clear($('f-uf')); clear($('f-cidade'));
+  if (uf === 'EX'){ cidadeSel.hidden = true; cidadeSel.disabled = true; cidadeTxt.hidden = false; cidadeTxt.placeholder = 'Cidade e país'; cidadeTxt.value = ''; return; }
+  if (cidadeTxt.placeholder === 'Cidade e país'){ cidadeTxt.hidden = true; cidadeTxt.placeholder = 'Sua cidade'; cidadeSel.hidden = false; }
   if (!cidadeTxt.hidden) { cidadeTxt.value = ''; cidadeTxt.focus(); return; }
   cidadeSel.disabled = true; cidadeSel.innerHTML = '<option value="">Carregando…</option>';
   try {
@@ -579,7 +631,8 @@ cidadeTxt.addEventListener('input', () => clear($('f-cidade')));
 const rules = {
   nome: v => v.trim().split(/\s+/).length >= 2 || 'Escreva nome e sobrenome.',
   insta: v => v.length >= 2 || 'Informe seu @ do Instagram.',
-  cel: v => [10,11].includes(digits(v).length) || 'Celular com DDD, ex.: (47) 99999-9999.',
+  cel: v => ddi().cc === 'BR' ? ([10,11].includes(digits(v).length) || 'Celular com DDD, ex.: (47) 99999-9999.')
+           : (digits(v).length >= 6 && digits(v).length <= 14) || 'Confira o número do celular.',
   email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) || 'Informe um e-mail válido.'
 };
 const clear = f => { f.classList.remove('bad'); const m = f.querySelector('.msg'); if (m) m.textContent = ''; };
@@ -601,8 +654,8 @@ $('form').addEventListener('submit', e => {
   if (first){ first.focus(); first.scrollIntoView({block:'center', behavior: reduce?'auto':'smooth'}); return; }
 
   const row = {
-    nome: $('nome').value.trim(), instagram: '@' + $('insta').value, celular: $('cel').value, email: $('email').value.trim().toLowerCase(),
-    estado: $('uf').value, cidade: cidade, interesse: ints.join(', '), autoriza: $('optin').checked ? 'Sim' : 'Não'
+    nome: $('nome').value.trim(), instagram: '@' + $('insta').value, celular: `+${ddi().code} ${$('cel').value.trim()}`, pais: regionName(ddi().cc), email: $('email').value.trim().toLowerCase(),
+    estado: $('uf').value === 'EX' ? 'Exterior' : $('uf').value, cidade: cidade, interesse: ints.join(', '), autoriza: $('optin').checked ? 'Sim' : 'Não'
   };
   const btn = $('send'); btn.disabled = true; btn.textContent = 'Enviando…';
   const ok = () => {
