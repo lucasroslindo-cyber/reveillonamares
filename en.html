@@ -360,7 +360,7 @@ footer .kicker{font-size:9.1px;letter-spacing:.42em}
         <div class="f" id="f-insta"><label for="insta">Instagram</label>
           <div class="wrapat"><span class="at">@</span><input type="text" class="ig" id="insta" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="yourprofile"></div><span class="msg"></span></div>
         <div class="f" id="f-cel"><label for="cel">Mobile / WhatsApp</label>
-          <div class="telrow"><div class="ddi"><span class="ddi-v" id="ddiV" aria-hidden="true">🇧🇷 +55</span><select id="ddi" aria-label="Phone country" autocomplete="tel-country-code"><option value="BR:55">Brasil (+55)</option></select></div>
+          <div class="telrow"><div class="ddi"><span class="ddi-v" id="ddiV" aria-hidden="true">🇧🇷 +55</span><select id="ddi" aria-label="Phone country" autocomplete="off"><option value="BR:55">Brasil (+55)</option></select></div>
           <input type="tel" id="cel" inputmode="tel" autocomplete="tel-national" placeholder="(47) 99999-9999"></div><span class="msg"></span></div>
         <div class="f" id="f-email"><label for="email">E-mail</label>
           <input type="email" id="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="you@email.com"><span class="msg"></span></div>
@@ -536,7 +536,11 @@ const opt = d => `<option value="${d.cc}:${d.code}">${d.name} (+${d.code})</opti
 ddiSel.innerHTML = TOP.map(cc => DDIS.find(d => d.cc === cc)).filter(Boolean).map(opt).join('')
   + '<option disabled>──────────</option>' + DDIS.filter(d => !TOP.includes(d.cc)).sort(byName).map(opt).join('');
 ddiSel.value = 'BR:55';
-const ddi = () => { const [cc, code] = ddiSel.value.split(':'); return {cc, code}; };
+const ddi = () => {
+  const v = String(ddiSel.value || ''), i = v.indexOf(':');
+  if (i < 2 || !/^\d+$/.test(v.slice(i+1))) { ddiSel.value = 'BR:55'; return {cc:'BR', code:'55'}; }
+  return {cc: v.slice(0,i), code: v.slice(i+1)};
+};
 /* quando o mesmo código serve vários países, fica o mais comum */
 const PREF = {'1':'US','7':'RU','44':'GB','47':'NO','61':'AU','262':'RE','590':'GP','599':'CW','212':'MA','358':'FI','39':'IT'};
 function detectDDI(d){
@@ -552,8 +556,9 @@ function showDDI(){
   ddiV.textContent = `${flag(cc)} +${code}`;
   $('cel').placeholder = cc === 'BR' ? '(47) 99999-9999' : 'Number with area code';
 }
-ddiSel.addEventListener('change', () => { showDDI(); clear($('f-cel')); $('cel').dispatchEvent(new Event('input')); $('cel').focus(); });
+ddiSel.addEventListener('change', () => { ddi(); showDDI(); clear($('f-cel')); $('cel').dispatchEvent(new Event('input')); $('cel').focus(); });
 showDDI();
+window.addEventListener('pageshow', () => { ddi(); showDDI(); });
 
 /* masks */
 const digits = v => v.replace(/\D/g,'');
