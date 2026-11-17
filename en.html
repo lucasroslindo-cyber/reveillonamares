@@ -90,6 +90,10 @@ img{display:block;max-width:100%}
 .zoom-bar a{background:var(--paper);color:var(--ink);border:0}
 .zoom-bar button{appearance:none;background:transparent;color:#f7f4ee;border:1px solid rgba(247,244,238,.45)}
 .hero-links{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.cta-row{display:flex;gap:10px;width:100%;max-width:400px;margin:8px auto 0}
+.cta-row .cta{flex:1 1 0;min-width:0;margin-top:0;padding:16px 10px;letter-spacing:.2em}
+.cta-row .cta-res{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.cta-bottom{margin:26px auto 8px}
 .launch{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:6px}
 .launch-k{display:inline-flex;align-items:center;gap:10px;font-family:var(--ui);font-size:18.9px;font-weight:500;letter-spacing:0;text-transform:uppercase;color:var(--gold)}
 .launch-k .arw{flex:none;width:28.6px;height:15.6px;color:var(--gold)}
@@ -285,11 +289,7 @@ src="https://www.facebook.com/tr?id=665901268792162&ev=PageView&noscript=1"
       <div class="unit"><span class="num" id="cd-s">00</span><span class="u">sec</span></div>
     </div>
     <div class="hero-links after">
-      <div class="launch" role="note">
-        <span class="launch-k"><svg class="arw arw-l" viewBox="0 0 22 12" aria-hidden="true"><path d="M1 6h18M14 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Sales open<svg class="arw arw-r" viewBox="0 0 22 12" aria-hidden="true"><path d="M1 6h18M14 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="launch-v">NOV 17 (TUESDAY) · 7 PM</span>
-      </div>
-      <a class="cta go-reserva" href="#reserva">Pre-book your spot</a>
+      <div class="cta-row"><a class="cta cta-tix" href="https://www.pensanoevento.com.br/eventos/113580/reveillon-amares-27-by-serenna" target="_blank" rel="noopener">Tickets</a><a class="cta cta-res" href="https://reveillonamares.com.br/reservas" target="_blank" rel="noopener">Bookings</a></div>
     </div>
   </header>
 
@@ -366,10 +366,11 @@ src="https://www.facebook.com/tr?id=665901268792162&ev=PageView&noscript=1"
 
   <div class="wrap" id="reserva">
     <div class="sec-text form-head">
-      <p class="kick"><span>Pre-booking</span></p>
-      <h2 class="h" id="s-reserva">Secure your priority for lounges, tables and tickets.</h2>
+      <p class="kick"><span>Tickets &amp; bookings</span></p>
+      <h2 class="h" id="s-reserva">Get your ticket or book your lounge or table.</h2>
     </div>
-    <form class="form" id="form" novalidate aria-labelledby="s-reserva">
+    <div class="cta-row cta-bottom"><a class="cta cta-tix" href="https://www.pensanoevento.com.br/eventos/113580/reveillon-amares-27-by-serenna" target="_blank" rel="noopener">Tickets</a><a class="cta cta-res" href="https://reveillonamares.com.br/reservas" target="_blank" rel="noopener">Bookings</a></div>
+    <form class="form" id="form" novalidate aria-labelledby="s-reserva" style="display:none" aria-hidden="true">
 
       <div class="group">
         <div class="f" id="f-nome"><label for="nome">Full name</label>
@@ -598,7 +599,7 @@ $('cel').addEventListener('input', e => {
 $('insta').addEventListener('input', e => { e.target.value = e.target.value.replace(/^@+/,'').replace(/[^a-zA-Z0-9._]/g,'').toLowerCase().slice(0,30); });
 
 /* links dos botões: troque aqui quando tiver o link de reserva (vazio = vai para o formulário desta página) */
-const LINKS = { reserva: '' };
+const LINKS = { reserva: 'https://reveillonamares.com.br/reservas' };
 document.querySelectorAll('.go-reserva').forEach(el => {
   if (LINKS.reserva) { el.href = LINKS.reserva; el.target = '_blank'; el.rel = 'noopener'; }
 });
