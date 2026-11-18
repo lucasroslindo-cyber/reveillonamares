@@ -694,5 +694,38 @@ $('form').addEventListener('submit', e => {
 })();
 </script>
 
+<script>
+/* Meta: cliques em Ingressos e Reservas (Pixel + API de Conversões com o mesmo event_id, para não contar em dobro) */
+(function () {
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwvpZYgsWKEuthrl4QAL-S1L9gvY560W2gcEaRZYHGIjEjF-NyGqqsinwyu4sSHndmFMw/exec';
+  function ck(n) { var m = document.cookie.match('(?:^|; )' + n + '=([^;]*)'); return m ? decodeURIComponent(m[1]) : ''; }
+  function fbc() {
+    var c = ck('_fbc'); if (c) return c;
+    var id = ''; try { id = new URLSearchParams(location.search).get('fbclid') || ''; } catch (e) {}
+    return id ? 'fb.1.' + Date.now() + '.' + id : '';
+  }
+  function vid() {
+    try { var v = localStorage.getItem('am_vid'); if (!v) { v = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); localStorage.setItem('am_vid', v); } return v; }
+    catch (e) { return ''; }
+  }
+  function track(ev, nome) {
+    var id = ev.toLowerCase() + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+    try { if (window.fbq) fbq('track', ev, { content_name: nome, content_category: 'Réveillon Amares' }, { eventID: id }); } catch (e) {}
+    try {
+      var body = JSON.stringify({ meta_event: ev, event_id: id, content_name: nome, url: location.href.split('#')[0],
+                                  ua: navigator.userAgent, fbp: ck('_fbp'), fbc: fbc(), vid: vid() });
+      var ok = false;
+      if (navigator.sendBeacon) ok = navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'text/plain;charset=UTF-8' }));
+      if (!ok) fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body });
+    } catch (e) {}
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a') : null;
+    if (!a) return;
+    if (a.classList.contains('cta-tix')) track('InitiateCheckout', 'Ingressos');
+    else if (a.classList.contains('cta-res') || a.classList.contains('go-reserva')) track('Contact', 'Reservas');
+  }, true);
+})();
+</script>
 </body>
 </html>
